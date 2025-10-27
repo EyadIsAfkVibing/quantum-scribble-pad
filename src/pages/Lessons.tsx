@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, BookOpen, Trash2, Edit, Youtube } from 'lucide-react';
+import { Plus, BookOpen, Edit, Youtube, Sparkles } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { CollapsibleLessonCard } from '@/components/lessons/CollapsibleLessonCard';
 import type { Lesson } from '@/types';
 
 export default function Lessons() {
@@ -66,30 +67,40 @@ export default function Lessons() {
 
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button className="gradient-primary hover:opacity-90">
+            <Button className="gradient-primary hover:opacity-90 glow-primary hover-lift">
               <Plus className="w-4 h-4 mr-2" />
               Create Lesson
             </Button>
           </DialogTrigger>
-          <DialogContent className="glass">
+          <DialogContent className="glass-strong border-2 border-primary/20">
             <DialogHeader>
-              <DialogTitle>Create New Lesson</DialogTitle>
+              <DialogTitle className="flex items-center gap-2 text-2xl">
+                <Sparkles className="w-6 h-6 text-primary" />
+                Create New Lesson
+              </DialogTitle>
               <DialogDescription>
                 Give your lesson a name to get started
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="name">Lesson Name</Label>
+                <Label htmlFor="name" className="text-base">Lesson Name</Label>
                 <Input
                   id="name"
                   value={newLessonName}
                   onChange={(e) => setNewLessonName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleCreateLesson();
+                    }
+                  }}
                   placeholder="e.g., Quadratic Equations"
-                  className="glass"
+                  className="glass mt-2 text-base"
+                  autoFocus
                 />
               </div>
-              <Button onClick={handleCreateLesson} className="w-full gradient-primary">
+              <Button onClick={handleCreateLesson} className="w-full gradient-primary hover-lift text-base h-11">
+                <Sparkles className="w-4 h-4 mr-2" />
                 Create Lesson
               </Button>
             </div>
@@ -99,53 +110,36 @@ export default function Lessons() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1 space-y-4">
-          <h2 className="text-xl font-semibold">Your Lessons</h2>
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-primary" />
+            Your Lessons
+            <span className="text-sm text-muted-foreground font-normal ml-auto">
+              {state.lessons.length} total
+            </span>
+          </h2>
           <AnimatePresence>
             {state.lessons.map((lesson, i) => (
-              <motion.div
+              <CollapsibleLessonCard
                 key={lesson.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ delay: i * 0.05 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <Card
-                  className={`glass cursor-pointer transition-all ${
-                    selectedLesson?.id === lesson.id ? 'glow-primary ring-2 ring-primary' : ''
-                  }`}
-                  onClick={() => setSelectedLesson(lesson)}
-                >
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>{lesson.name}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteLesson(lesson.id);
-                          if (selectedLesson?.id === lesson.id) {
-                            setSelectedLesson(null);
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4 text-destructive" />
-                      </Button>
-                    </CardTitle>
-                    <CardDescription>
-                      Updated {new Date(lesson.updatedAt).toLocaleDateString()}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </motion.div>
+                lesson={lesson}
+                isSelected={selectedLesson?.id === lesson.id}
+                onClick={() => setSelectedLesson(lesson)}
+                onDelete={() => {
+                  deleteLesson(lesson.id);
+                  if (selectedLesson?.id === lesson.id) {
+                    setSelectedLesson(null);
+                  }
+                }}
+                index={i}
+              />
             ))}
           </AnimatePresence>
           
           {state.lessons.length === 0 && (
             <Card className="glass">
               <CardContent className="pt-6 text-center text-muted-foreground">
-                No lessons yet. Create your first one!
+                <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>No lessons yet. Create your first one!</p>
               </CardContent>
             </Card>
           )}
@@ -159,33 +153,36 @@ export default function Lessons() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <Card className="glass">
-                <CardHeader>
+              <Card className="glass-strong hover-lift">
+                <CardHeader className="border-b border-white/10">
                   <CardTitle className="text-2xl flex items-center gap-2">
-                    <Edit className="w-6 h-6 text-primary" />
+                    <Edit className="w-6 h-6 text-primary glow-primary" />
                     {selectedLesson.name}
                   </CardTitle>
+                  <CardDescription>
+                    Last updated {new Date(selectedLesson.updatedAt).toLocaleString()}
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6 pt-6">
                   <div>
-                    <Label>Notes & Formulas</Label>
+                    <Label className="text-base font-semibold">Notes & Formulas</Label>
                     <Textarea
                       value={selectedLesson.notes}
                       onChange={(e) => handleUpdateNotes(selectedLesson.id, e.target.value)}
                       placeholder="Write your notes, formulas, and explanations here..."
-                      className="min-h-[300px] glass resize-none"
+                      className="min-h-[300px] glass resize-none mt-2 text-base"
                     />
                   </div>
 
                   <div>
-                    <Label className="flex items-center gap-2 mb-2">
-                      <Youtube className="w-4 h-4 text-destructive" />
+                    <Label className="flex items-center gap-2 mb-3 text-base font-semibold">
+                      <Youtube className="w-5 h-5 text-destructive" />
                       YouTube Videos
                     </Label>
                     <div className="flex gap-2 mb-4">
                       <Input
-                        placeholder="Paste YouTube URL..."
-                        className="glass"
+                        placeholder="Paste YouTube URL and press Enter..."
+                        className="glass text-base"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             const input = e.currentTarget;
@@ -198,7 +195,7 @@ export default function Lessons() {
                       />
                       <Button
                         variant="outline"
-                        className="glass"
+                        className="glass hover:glow-accent"
                         onClick={(e) => {
                           const input = e.currentTarget.previousElementSibling as HTMLInputElement;
                           if (input?.value.trim()) {
@@ -212,19 +209,32 @@ export default function Lessons() {
                     </div>
 
                     <div className="space-y-4">
+                      {selectedLesson.videos.length === 0 && (
+                        <div className="glass-strong rounded-lg p-6 text-center text-muted-foreground">
+                          <Youtube className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                          <p>No videos yet. Add a YouTube URL above.</p>
+                        </div>
+                      )}
                       {selectedLesson.videos.map((videoUrl, i) => {
                         const videoId = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)?.[1];
                         return videoId ? (
-                          <div key={i} className="aspect-video rounded-lg overflow-hidden glass">
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="aspect-video rounded-lg overflow-hidden glass-strong shadow-2xl hover-lift"
+                          >
                             <iframe
                               src={`https://www.youtube.com/embed/${videoId}`}
                               className="w-full h-full"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                               allowFullScreen
                             />
-                          </div>
+                          </motion.div>
                         ) : (
-                          <p key={i} className="text-sm text-muted-foreground">Invalid YouTube URL</p>
+                          <div key={i} className="glass-strong rounded-lg p-4 text-sm text-destructive">
+                            Invalid YouTube URL: {videoUrl}
+                          </div>
                         );
                       })}
                     </div>
@@ -233,12 +243,17 @@ export default function Lessons() {
               </Card>
             </motion.div>
           ) : (
-            <Card className="glass h-full flex items-center justify-center min-h-[400px]">
-              <CardContent className="text-center">
-                <BookOpen className="w-16 h-16 mx-auto mb-4 text-muted-foreground animate-float" />
-                <p className="text-xl text-muted-foreground">
-                  Select a lesson to view details
-                </p>
+            <Card className="glass-strong h-full flex items-center justify-center min-h-[500px]">
+              <CardContent className="text-center space-y-4">
+                <BookOpen className="w-20 h-20 mx-auto mb-4 text-primary/50 animate-float" />
+                <div>
+                  <p className="text-2xl font-semibold mb-2">
+                    Select a lesson to begin
+                  </p>
+                  <p className="text-muted-foreground">
+                    Choose a lesson from the left or create a new one
+                  </p>
+                </div>
               </CardContent>
             </Card>
           )}

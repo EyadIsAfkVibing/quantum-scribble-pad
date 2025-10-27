@@ -55,20 +55,20 @@ export default function Settings() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="glass">
-            <CardHeader>
+          <Card className="glass-strong hover-lift">
+            <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-2">
                 {settings.theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                 Appearance
               </CardTitle>
               <CardDescription>
-                Customize the look and feel of the app
+                Customize the look and feel with smooth transitions
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="theme">Dark Mode</Label>
+                  <Label htmlFor="theme" className="text-base font-semibold">Dark Mode</Label>
                   <p className="text-sm text-muted-foreground">
                     Switch between light and dark themes
                   </p>
@@ -145,36 +145,36 @@ export default function Settings() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="glass">
-            <CardHeader>
+          <Card className="glass-strong hover-lift">
+            <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
+                <Sparkles className="w-5 h-5 text-primary" />
                 Background Style
               </CardTitle>
               <CardDescription>
                 Choose your preferred background animation
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex gap-2">
+            <CardContent className="pt-6">
+              <div className="flex gap-2 flex-wrap">
                 <Button
                   variant={settings.backgroundStyle === 'gradient' ? 'default' : 'outline'}
                   onClick={() => setBackgroundStyle('gradient')}
-                  className={settings.backgroundStyle === 'gradient' ? 'gradient-primary' : 'glass'}
+                  className={settings.backgroundStyle === 'gradient' ? 'gradient-primary hover-lift' : 'glass hover-lift'}
                 >
                   Gradient
                 </Button>
                 <Button
                   variant={settings.backgroundStyle === 'particles' ? 'default' : 'outline'}
                   onClick={() => setBackgroundStyle('particles')}
-                  className={settings.backgroundStyle === 'particles' ? 'gradient-primary' : 'glass'}
+                  className={settings.backgroundStyle === 'particles' ? 'gradient-primary hover-lift' : 'glass hover-lift'}
                 >
                   Particles
                 </Button>
                 <Button
                   variant={settings.backgroundStyle === 'waves' ? 'default' : 'outline'}
                   onClick={() => setBackgroundStyle('waves')}
-                  className={settings.backgroundStyle === 'waves' ? 'gradient-primary' : 'glass'}
+                  className={settings.backgroundStyle === 'waves' ? 'gradient-primary hover-lift' : 'glass hover-lift'}
                 >
                   Waves
                 </Button>

@@ -15,7 +15,7 @@ export function Navigation() {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass border-b">
+    <nav className="fixed top-0 left-0 right-0 z-50 glass-strong border-b">
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
           <motion.div
@@ -39,7 +39,7 @@ export function Navigation() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={cn(
-                    "relative px-4 py-2 rounded-lg transition-colors flex items-center gap-2",
+                    "relative px-4 py-2 rounded-lg transition-all flex items-center gap-2 hover-lift",
                     isActive 
                       ? "text-primary-foreground" 
                       : "text-muted-foreground hover:text-foreground"
