@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Code2, Play, Save } from 'lucide-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -128,17 +126,11 @@ export default function Code() {
             </CardHeader>
             <CardContent>
               <div className="rounded-lg overflow-hidden">
-                <SyntaxHighlighter
-                  language={activeTab === 'cpp' ? 'cpp' : activeTab}
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    borderRadius: '0.5rem',
-                    fontSize: '0.875rem',
-                  }}
-                >
-                  {code[activeTab]}
-                </SyntaxHighlighter>
+                <div className="rounded-lg overflow-hidden">
+                  <pre className="text-sm p-4 m-0 rounded-md overflow-auto bg-muted/20">
+                    <code className="font-mono">{code[activeTab]}</code>
+                  </pre>
+                </div>
               </div>
             </CardContent>
           </Card>
