@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,10 +17,6 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -32,7 +27,7 @@ const App = () => {
             <div className="min-h-screen w-full relative">
               <AnimatedBackground />
               <Navigation />
-              <main className="pt-16 pr-0 md:pr-80">
+              <main className="pt-16 pb-8">
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/lessons" element={<Lessons />} />
