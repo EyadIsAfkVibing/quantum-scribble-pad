@@ -26,6 +26,8 @@ export default function Lessons() {
       notes: '',
       formulas: [],
       videos: [],
+      videoUrls: [],
+      timeSpent: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
