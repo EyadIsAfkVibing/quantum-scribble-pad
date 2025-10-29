@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, BookOpen, Edit, Youtube, Sparkles } from 'lucide-react';
+import { Plus, BookOpen, Edit, Youtube, Sparkles, Play } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { CollapsibleLessonCard } from '@/components/lessons/CollapsibleLessonCard';
+import { DraggableVideo } from '@/components/DraggableVideo';
+import { extractVideoId, isValidYouTubeUrl } from '@/utils/youtube';
+import { useToast } from '@/hooks/use-toast';
 import type { Lesson } from '@/types';
 
 export default function Lessons() {
@@ -16,6 +19,8 @@ export default function Lessons() {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newLessonName, setNewLessonName] = useState('');
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const handleCreateLesson = () => {
     if (!newLessonName.trim()) return;
@@ -39,11 +44,46 @@ export default function Lessons() {
   };
 
   const handleAddVideo = (lessonId: string, videoUrl: string) => {
+    if (!isValidYouTubeUrl(videoUrl)) {
+      toast({
+        title: "Invalid YouTube URL",
+        description: "Please enter a valid YouTube video URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const videoId = extractVideoId(videoUrl);
+    if (!videoId) {
+      toast({
+        title: "Could not extract video ID",
+        description: "Please check the URL format",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const lesson = state.lessons.find(l => l.id === lessonId);
     if (lesson) {
+      const updatedVideoUrls = [...(lesson.videoUrls || []), videoUrl];
+      const updatedVideos = [...(lesson.videos || []), videoId];
+      
       updateLesson(lessonId, {
-        videos: [...lesson.videos, videoUrl],
+        videoUrls: updatedVideoUrls,
+        videos: updatedVideos,
       });
+
+      toast({
+        title: "Video added",
+        description: "YouTube video has been added to this lesson",
+      });
+
+      // Trigger aurora pulse
+      document.dispatchEvent(
+        new CustomEvent('aurora:pulse', { 
+          detail: { amplitude: 1.5, duration: 600 } 
+        })
+      );
     }
   };
 
@@ -217,32 +257,52 @@ export default function Lessons() {
                           <p>No videos yet. Add a YouTube URL above.</p>
                         </div>
                       )}
-                      {selectedLesson.videos.map((videoUrl, i) => {
-                        const videoId = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)?.[1];
-                        return videoId ? (
-                          <motion.div
-                            key={i}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="aspect-video rounded-lg overflow-hidden glass-strong shadow-2xl hover-lift"
-                          >
-                            <iframe
-                              src={`https://www.youtube.com/embed/${videoId}`}
-                              className="w-full h-full"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                            />
-                          </motion.div>
-                        ) : (
-                          <div key={i} className="glass-strong rounded-lg p-4 text-sm text-destructive">
-                            Invalid YouTube URL: {videoUrl}
+                      {selectedLesson.videos.map((videoId, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="glass-strong rounded-lg p-4 hover:glow-primary transition-all group cursor-pointer"
+                          onClick={() => {
+                            setActiveVideoId(videoId);
+                            document.dispatchEvent(
+                              new CustomEvent('aurora:pulse', { 
+                                detail: { amplitude: 1.6, duration: 600 } 
+                              })
+                            );
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-destructive to-destructive/50 flex items-center justify-center group-hover:glow-accent transition-all">
+                              <Play className="w-8 h-8 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold">Video {i + 1}</p>
+                              <p className="text-xs text-muted-foreground font-mono">{videoId}</p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              Open Player
+                            </Button>
                           </div>
-                        );
-                      })}
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Draggable Video Player */}
+              {activeVideoId && (
+                <DraggableVideo
+                  videoId={activeVideoId}
+                  lessonId={selectedLesson.id}
+                  onClose={() => setActiveVideoId(null)}
+                />
+              )}
             </motion.div>
           ) : (
             <Card className="glass-strong h-full flex items-center justify-center min-h-[500px]">

@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import { Navigation } from "@/components/layout/Navigation";
 import { NotesSidebar } from "@/components/layout/NotesSidebar";
-import { AnimatedBackground } from "@/components/layout/AnimatedBackground";
+import { QuickNotesButton } from "@/components/QuickNotesButton";
 import Home from "./pages/Home";
 import Lessons from "./pages/Lessons";
 import Code from "./pages/Code";
@@ -25,7 +25,6 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <div className="min-h-screen w-full relative">
-              <AnimatedBackground />
               <Navigation />
               <main className="pt-16 pb-8">
                 <Routes>
@@ -38,6 +37,7 @@ const App = () => {
                 </Routes>
               </main>
               <NotesSidebar />
+              <QuickNotesButton />
             </div>
           </BrowserRouter>
         </AppProvider>

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEffect } from 'react';
 
 export default function Settings() {
@@ -29,8 +30,21 @@ export default function Settings() {
       size === 'small' ? '14px' : size === 'large' ? '18px' : '16px';
   };
 
-  const setBackgroundStyle = (style: 'gradient' | 'particles' | 'waves') => {
-    updateSettings({ backgroundStyle: style });
+  const handleAuroraIntensityChange = (intensity: 'low' | 'medium' | 'high') => {
+    updateSettings({ auroraIntensity: intensity });
+    
+    // Trigger aurora update
+    const intensityMap = {
+      low: { amplitude: 0.8, blend: 0.4 },
+      medium: { amplitude: 1.0, blend: 0.5 },
+      high: { amplitude: 1.3, blend: 0.7 },
+    };
+    
+    document.dispatchEvent(
+      new CustomEvent('aurora:set', { 
+        detail: intensityMap[intensity]
+      })
+    );
   };
 
   return (
@@ -149,35 +163,30 @@ export default function Settings() {
             <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-primary" />
-                Background Style
+                Aurora Background
               </CardTitle>
               <CardDescription>
-                Choose your preferred background animation
+                Control the intensity of the Aurora background effect
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant={settings.backgroundStyle === 'gradient' ? 'default' : 'outline'}
-                  onClick={() => setBackgroundStyle('gradient')}
-                  className={settings.backgroundStyle === 'gradient' ? 'gradient-primary hover-lift' : 'glass hover-lift'}
+              <div className="space-y-2">
+                <Label htmlFor="aurora">Aurora Intensity</Label>
+                <Select
+                  value={settings.auroraIntensity}
+                  onValueChange={(value: 'low' | 'medium' | 'high') =>
+                    handleAuroraIntensityChange(value)
+                  }
                 >
-                  Gradient
-                </Button>
-                <Button
-                  variant={settings.backgroundStyle === 'particles' ? 'default' : 'outline'}
-                  onClick={() => setBackgroundStyle('particles')}
-                  className={settings.backgroundStyle === 'particles' ? 'gradient-primary hover-lift' : 'glass hover-lift'}
-                >
-                  Particles
-                </Button>
-                <Button
-                  variant={settings.backgroundStyle === 'waves' ? 'default' : 'outline'}
-                  onClick={() => setBackgroundStyle('waves')}
-                  className={settings.backgroundStyle === 'waves' ? 'gradient-primary hover-lift' : 'glass hover-lift'}
-                >
-                  Waves
-                </Button>
+                  <SelectTrigger id="aurora" className="glass">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low - Subtle and calm</SelectItem>
+                    <SelectItem value="medium">Medium - Balanced</SelectItem>
+                    <SelectItem value="high">High - Vibrant and dynamic</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>

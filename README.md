@@ -1,8 +1,62 @@
-# Welcome to your Lovable project
+# MathMind - Premium Student Dashboard
+
+A stunning, interactive learning platform for math and programming with advanced WebGL-powered Aurora background.
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/4e87f866-f732-4f34-af2f-17ff438e63af
+
+## ✨ New Features
+
+### 🌌 Aurora Background
+- **WebGL-powered** animated background using OGL library
+- **Event-driven**: Responds to UI interactions (button clicks, lesson opens)
+- **Customizable**: Adjust intensity in Settings (Low/Medium/High)
+
+#### Triggering Aurora Effects
+```javascript
+// Pulse effect (temporary intensity increase)
+document.dispatchEvent(
+  new CustomEvent('aurora:pulse', { 
+    detail: { amplitude: 1.5, duration: 600 } 
+  })
+);
+
+// Set permanent values
+document.dispatchEvent(
+  new CustomEvent('aurora:set', { 
+    detail: { amplitude: 1.2, blend: 0.6 } 
+  })
+);
+```
+
+### 🧮 Enhanced Math Solver
+- **Linear Equations**: Solve for x (e.g., 3x + 5 = 14)
+- **Quadratic Solver**: Complete with discriminant, roots, vertex, and step-by-step solution
+- **Square Root**: Instant calculation with simplification steps
+
+### 🎥 Draggable Video Player
+- **YouTube embedding** with URL validation
+- **Drag & resize** anywhere on screen
+- **Position persistence** across page reloads
+- Smooth animations and glow effects
+
+### 🏆 Gamification Features
+- **Study Streaks**: Track daily learning habits
+- **Achievements**: Unlock badges for milestones
+- **Quick Notes**: Floating button with autosave
+
+## 🎨 Design System
+
+### Colors (HSL)
+- Primary: `260 90% 65%` (Purple)
+- Secondary: `180 95% 55%` (Cyan)
+- Accent: `320 95% 65%` (Pink)
+
+### Aurora Intensity Settings
+- **Low**: amplitude 0.8, blend 0.4
+- **Medium**: amplitude 1.0, blend 0.5 (default)
+- **High**: amplitude 1.3, blend 0.7
 
 ## How can I edit this code?
 
@@ -59,6 +113,10 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- **OGL** - WebGL rendering for Aurora
+- **Math.js** - Advanced mathematical computations
+- **React-RND** - Drag and resize functionality
+- **Framer Motion** - Smooth animations
 
 ## How can I deploy this project?
 
@@ -71,3 +129,15 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## 🎯 Usage Tips
+
+1. **Aurora Background**: Reacts to all major UI interactions automatically
+2. **Performance**: Adjust Aurora intensity in Settings if needed
+3. **Video Player**: Videos save their position per lesson - drag and resize freely
+4. **Math Solver**: Switch between Linear, Quadratic, and √ tabs for different problem types
+5. **Quick Notes**: Access from any page via the floating button (bottom-right)
+6. **Achievements**: Complete tasks to unlock badges automatically
+
+## 📝 License
+MIT
