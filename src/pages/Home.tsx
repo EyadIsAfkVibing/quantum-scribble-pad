@@ -11,6 +11,8 @@ import { AchievementBadge } from '@/components/AchievementBadge';
 import { Splash } from '@/components/Splash';
 import { QuickSolve } from '@/components/QuickSolve';
 import { StudyTimer } from '@/components/StudyTimer';
+import { SessionResume } from '@/components/SessionResume';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 const Aurora = lazy(() => import('@/components/Aurora'));
 
@@ -18,6 +20,8 @@ export default function Home() {
   const { state, updateLesson } = useApp();
   const [showSplash, setShowSplash] = useState(true);
   const [showContent, setShowContent] = useState(false);
+  
+  useKeyboardShortcuts();
   
   // Guard against undefined state
   if (!state) {
@@ -90,13 +94,21 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-4"
         >
-          <h1 className="text-6xl font-bold gradient-primary bg-clip-text text-transparent">
+          <motion.h1 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ staggerChildren: 0.05 }}
+            className="text-4xl md:text-6xl font-bold gradient-primary bg-clip-text text-transparent"
+          >
             MathMind
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          </motion.h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
             Your futuristic workspace for math and programming
           </p>
         </motion.div>
+
+        {/* Session Resume */}
+        <SessionResume />
 
         {/* Quick Actions */}
         <motion.div

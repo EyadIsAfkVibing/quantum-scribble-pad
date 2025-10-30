@@ -1,85 +1,111 @@
 # MathMind - Premium Student Dashboard
 
-A stunning, interactive learning platform for math and programming with advanced WebGL-powered Aurora background.
+Your stunning, interactive learning platform for math and programming with cutting-edge UI/UX.
 
-## Project info
+## ✨ New Features
 
-**URL**: https://lovable.dev/projects/4e87f866-f732-4f34-af2f-17ff438e63af
+### 🔍 Universal Search (⌘K)
+- **Smart Search**: Instantly search across lessons, notes, math problems, and code snippets
+- **Live Preview**: Hover over results to see content previews
+- **Keyboard Shortcut**: Press ⌘K (Mac) or Ctrl+K (Windows) to open
+- **Filtered Results**: Type to see real-time filtered results with category badges
 
-## ✨ Features
+### 🎯 Smart Session Resume
+- **Auto-Detection**: Automatically detects your last activity
+- **One-Click Resume**: Jump right back to where you left off
+- **Progress Tracking**: Visual progress bar showing session completion
+- **Activity Types**: Resume lessons, math problems, or code snippets
 
-### 🌌 Aurora Background
-- **WebGL-powered** animated background using OGL library
-- **Event-driven**: Responds to UI interactions (button clicks, lesson opens)
-- **Customizable**: Adjust intensity in Settings (Low/Medium/High)
-- **Lazy-loaded**: Optimized for performance with React.Suspense
+### 📊 Live Progress Indicator
+- **Navbar Widget**: Circular progress ring showing weekly activity
+- **Hover Details**: See problem count and total lessons on hover
+- **Visual Feedback**: Gradient ring fills based on weekly problem count
+- **Goal Tracking**: Tracks up to 20 problems per week
 
-#### Triggering Aurora Effects
-```javascript
-// Pulse effect (temporary intensity increase)
-document.dispatchEvent(
-  new CustomEvent('aurora:pulse', { 
-    detail: { amplitude: 1.5, duration: 600 } 
-  })
-);
+### ⌨️ Keyboard Shortcuts
+All shortcuts work globally (except when typing in inputs):
 
-// Set permanent values
-document.dispatchEvent(
-  new CustomEvent('aurora:set', { 
-    detail: { amplitude: 1.2, blend: 0.6 } 
-  })
-);
-```
+- **⌘/Ctrl + K** - Universal Search
+- **⌘/Ctrl + H** - Go to Home
+- **⌘/Ctrl + L** - Go to Lessons
+- **⌘/Ctrl + E** - Go to Code Lab
+- **⌘/Ctrl + I** - Go to History
+- **N** - New Lesson (quick action)
+- **S** - Focus Math Solver
+- **?** - Show keyboard shortcuts help
 
-### 🧮 Enhanced Math Solver
-- **Linear Equations**: Solve for x (e.g., 3x + 5 = 14)
-- **Quadratic Solver**: Complete with discriminant, roots, vertex, and step-by-step solution
-- **Square Root**: Instant calculation with simplification steps
-- **Quick Solve Widget**: Fast calculations right from home page
+### 🎨 Enhanced UI/Design
+- **Inter Variable Font**: Premium typography with font features
+- **Deep Charcoal Base**: Refined background (#0d0d12) with teal/purple accents
+- **Fluid Theme Transitions**: Smooth 0.4s color interpolation on theme switch
+- **Glassmorphism 2.0**: Enhanced translucent cards with inner glow
+- **Micro-interactions**: Button ripples, hover effects, card transforms
+- **Motion Typography**: Letter-by-letter heading animations (Home page)
+- **Responsive Design**: Adaptive layouts for mobile, tablet, and desktop
 
-### 🎥 Draggable Video Player
-- **YouTube embedding** with URL validation and extraction
-- **Drag & resize** anywhere on screen using react-rnd
-- **Position persistence** across page reloads (stored per lesson)
-- Smooth animations and glow effects
-- Thumbnail previews with click-to-play
+### 🎵 Ambient Feedback System
+- **Sound Effects**: Subtle click and success sounds (toggleable in settings)
+- **Visual Pulses**: Aurora background responds to UI interactions
+- **Accessibility**: Respects `prefers-reduced-motion` system setting
+- **Performance**: Efficient Web Audio API implementation
 
-### ⏱️ Study Timer
-- Track study session duration
-- Start/pause/reset controls
-- Automatic time logging per lesson
-- Persistent session data in localStorage
+### 🌌 Aurora Background (Enhanced)
+- **Event-Driven**: Responds to all major UI interactions
+- **Smooth Interpolation**: Gentle amplitude and blend transitions
+- **Customizable Intensity**: Low/Medium/High settings in Settings
+- **Lazy-Loaded**: Optimized performance with React.Suspense
+- **Event API**:
+  ```javascript
+  // Pulse effect
+  document.dispatchEvent(
+    new CustomEvent('aurora:pulse', { 
+      detail: { amplitude: 1.5, duration: 600 } 
+    })
+  );
+  ```
 
-### 🏆 Progress Tracking
-- **Study Streaks**: Daily learning habit tracking
-- **Achievements**: Unlock badges for milestones
-- **Quick Notes**: Floating button with autosave (accessible from any page)
-- **History**: View all past math problems and code snippets
-
-### 📚 Lesson Management
-- Create and organize study materials
-- Collapsible lesson cards (one open at a time)
-- Rich text notes with autosave
-- Multiple video embeds per lesson
-- Time spent tracking
+### 📱 Responsive Features
+- **Adaptive Navigation**: Compact on mobile, full labels on desktop
+- **Touch Optimized**: Proper tap targets and gesture support
+- **Flexible Search**: Full-width on mobile, centered on desktop
+- **Smart Hiding**: Less important UI elements hide on small screens
 
 ## 🎨 Design System
 
-### Premium Load Animation
-- Smooth splash screen on first load
-- Staggered content reveal with Framer Motion
-- Logo glow effect and shimmer
+### Colors (Updated)
+- **Background**: Deep charcoal `#0d0d12` (220 25% 5%)
+- **Primary Accent**: Cyan `#22d3ee` (190 95% 55%)
+- **Secondary Accent**: Purple `#a855f7` (280 90% 65%)
+- **Accent Highlight**: Pink `#f472b6` (320 95% 65%)
 
-### Colors (HSL)
-- Primary: `260 90% 65%` (Purple)
-- Secondary: `180 95% 55%` (Cyan)
-- Accent: `320 95% 65%` (Pink)
-- Glassmorphism effects throughout
+### Typography
+- **Font Family**: Inter Variable with CV11, SS01 features
+- **Headings**: 2.5rem (responsive: 1.5rem mobile)
+- **Body**: 1rem with optimal line height
+- **Text Color**: #e7e7f0 (light gray)
 
-### Aurora Intensity Settings
-- **Low**: amplitude 0.8, blend 0.4 (subtle)
-- **Medium**: amplitude 1.0, blend 0.5 (default)
-- **High**: amplitude 1.3, blend 0.7 (vibrant)
+### Animations
+- **Entry**: 0.6s fade with stagger
+- **Hover Lift**: 0.2s transform
+- **Theme Switch**: 0.4s ease-in-out color interpolation
+- **Aurora Pulse**: 0.4-0.6s amplitude shift
+
+## 🚀 Performance
+
+- **Lazy Loading**: Aurora, search modal, and heavy components
+- **Code Splitting**: Dynamic imports for route-based splitting
+- **Accessibility**: Full keyboard navigation and ARIA labels
+- **Motion Preferences**: Respects `prefers-reduced-motion`
+- **Optimized Rendering**: Efficient state management and memoization
+
+## 🎯 Usage Tips
+
+1. **Quick Navigation**: Use keyboard shortcuts for instant page switching
+2. **Fast Search**: Press ⌘K from anywhere to search
+3. **Resume Sessions**: Home page automatically shows your last activity
+4. **Track Progress**: Check the navbar indicator to see weekly progress
+5. **Ambient Feedback**: Enable sound effects in Settings for audio cues
+6. **Theme Switching**: Enjoy smooth color transitions between light/dark modes
 
 ## How can I edit this code?
 
