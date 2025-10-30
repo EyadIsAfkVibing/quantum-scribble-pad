@@ -19,11 +19,16 @@ export default function Home() {
   const [showSplash, setShowSplash] = useState(true);
   const [showContent, setShowContent] = useState(false);
   
+  // Guard against undefined state
+  if (!state) {
+    return <Splash onComplete={() => {}} />;
+  }
+  
   // Safe state reads with fallbacks
-  const lessons = state.lessons ?? [];
-  const achievements = state.achievements ?? [];
-  const history = state.mathHistory ?? [];
-  const streak = state.studyStreak ?? { currentStreak: 0, longestStreak: 0, totalDays: 0, lastStudyDate: '' };
+  const lessons = state?.lessons ?? [];
+  const achievements = state?.achievements ?? [];
+  const history = state?.mathHistory ?? [];
+  const streak = state?.studyStreak ?? { currentStreak: 0, longestStreak: 0, totalDays: 0, lastStudyDate: '' };
   
   const auroraIntensityMap = {
     low: { amplitude: 0.8, blend: 0.4 },
@@ -31,7 +36,7 @@ export default function Home() {
     high: { amplitude: 1.3, blend: 0.7 },
   };
 
-  const auroraSettings = auroraIntensityMap[state.settings.auroraIntensity];
+  const auroraSettings = auroraIntensityMap[state?.settings?.auroraIntensity ?? 'medium'];
   
   useEffect(() => {
     // Minimum splash duration for premium feel
@@ -45,8 +50,8 @@ export default function Home() {
   
   const handleTimerUpdate = (seconds: number) => {
     // Update study time for current session
-    const activeLesson = lessons.find(l => l.id === state.currentNotes);
-    if (activeLesson) {
+    const activeLesson = lessons.find(l => l.id === state?.currentNotes);
+    if (activeLesson && updateLesson) {
       updateLesson(activeLesson.id, { 
         timeSpent: Math.floor(seconds / 60) 
       });
