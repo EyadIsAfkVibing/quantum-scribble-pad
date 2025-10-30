@@ -251,58 +251,50 @@ export default function Lessons() {
                     </div>
 
                     <div className="space-y-4">
-                      {selectedLesson.videos.length === 0 && (
+                      {selectedLesson.videos && selectedLesson.videos.length > 0 ? (
+                        selectedLesson.videos.map((videoId, idx) => (
+                          <motion.div
+                            key={idx}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="glass-strong rounded-lg p-4 hover:glow-primary transition-all group cursor-pointer"
+                            onClick={() => {
+                              setActiveVideoId(videoId);
+                              document.dispatchEvent(
+                                new CustomEvent('aurora:pulse', { 
+                                  detail: { amplitude: 1.6, duration: 600 } 
+                                })
+                              );
+                            }}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-destructive to-destructive/50 flex items-center justify-center group-hover:glow-accent transition-all">
+                                <Play className="w-8 h-8 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold">Video {idx + 1}</p>
+                                <p className="text-xs text-muted-foreground font-mono">{videoId}</p>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                Open Player
+                              </Button>
+                            </div>
+                          </motion.div>
+                        ))
+                      ) : (
                         <div className="glass-strong rounded-lg p-6 text-center text-muted-foreground">
                           <Youtube className="w-12 h-12 mx-auto mb-2 opacity-50" />
                           <p>No videos yet. Add a YouTube URL above.</p>
                         </div>
                       )}
-                      {selectedLesson.videos.map((videoId, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="glass-strong rounded-lg p-4 hover:glow-primary transition-all group cursor-pointer"
-                          onClick={() => {
-                            setActiveVideoId(videoId);
-                            document.dispatchEvent(
-                              new CustomEvent('aurora:pulse', { 
-                                detail: { amplitude: 1.6, duration: 600 } 
-                              })
-                            );
-                          }}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-destructive to-destructive/50 flex items-center justify-center group-hover:glow-accent transition-all">
-                              <Play className="w-8 h-8 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="font-semibold">Video {i + 1}</p>
-                              <p className="text-xs text-muted-foreground font-mono">{videoId}</p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              Open Player
-                            </Button>
-                          </div>
-                        </motion.div>
-                      ))}
                     </div>
                   </div>
                 </CardContent>
               </Card>
-
-              {/* Draggable Video Player */}
-              {activeVideoId && (
-                <DraggableVideo
-                  videoId={activeVideoId}
-                  lessonId={selectedLesson.id}
-                  onClose={() => setActiveVideoId(null)}
-                />
-              )}
             </motion.div>
           ) : (
             <Card className="glass-strong h-full flex items-center justify-center min-h-[500px]">
@@ -321,6 +313,15 @@ export default function Lessons() {
           )}
         </div>
       </div>
+      
+      {/* Draggable Video Player */}
+      {activeVideoId && (
+        <DraggableVideo
+          videoId={activeVideoId}
+          lessonId={selectedLesson?.id || 'temp'}
+          onClose={() => setActiveVideoId(null)}
+        />
+      )}
     </div>
   );
 }

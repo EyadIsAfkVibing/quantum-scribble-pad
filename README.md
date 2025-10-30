@@ -6,12 +6,13 @@ A stunning, interactive learning platform for math and programming with advanced
 
 **URL**: https://lovable.dev/projects/4e87f866-f732-4f34-af2f-17ff438e63af
 
-## ✨ New Features
+## ✨ Features
 
 ### 🌌 Aurora Background
 - **WebGL-powered** animated background using OGL library
 - **Event-driven**: Responds to UI interactions (button clicks, lesson opens)
 - **Customizable**: Adjust intensity in Settings (Low/Medium/High)
+- **Lazy-loaded**: Optimized for performance with React.Suspense
 
 #### Triggering Aurora Effects
 ```javascript
@@ -34,29 +35,51 @@ document.dispatchEvent(
 - **Linear Equations**: Solve for x (e.g., 3x + 5 = 14)
 - **Quadratic Solver**: Complete with discriminant, roots, vertex, and step-by-step solution
 - **Square Root**: Instant calculation with simplification steps
+- **Quick Solve Widget**: Fast calculations right from home page
 
 ### 🎥 Draggable Video Player
-- **YouTube embedding** with URL validation
-- **Drag & resize** anywhere on screen
-- **Position persistence** across page reloads
+- **YouTube embedding** with URL validation and extraction
+- **Drag & resize** anywhere on screen using react-rnd
+- **Position persistence** across page reloads (stored per lesson)
 - Smooth animations and glow effects
+- Thumbnail previews with click-to-play
 
-### 🏆 Gamification Features
-- **Study Streaks**: Track daily learning habits
+### ⏱️ Study Timer
+- Track study session duration
+- Start/pause/reset controls
+- Automatic time logging per lesson
+- Persistent session data in localStorage
+
+### 🏆 Progress Tracking
+- **Study Streaks**: Daily learning habit tracking
 - **Achievements**: Unlock badges for milestones
-- **Quick Notes**: Floating button with autosave
+- **Quick Notes**: Floating button with autosave (accessible from any page)
+- **History**: View all past math problems and code snippets
+
+### 📚 Lesson Management
+- Create and organize study materials
+- Collapsible lesson cards (one open at a time)
+- Rich text notes with autosave
+- Multiple video embeds per lesson
+- Time spent tracking
 
 ## 🎨 Design System
+
+### Premium Load Animation
+- Smooth splash screen on first load
+- Staggered content reveal with Framer Motion
+- Logo glow effect and shimmer
 
 ### Colors (HSL)
 - Primary: `260 90% 65%` (Purple)
 - Secondary: `180 95% 55%` (Cyan)
 - Accent: `320 95% 65%` (Pink)
+- Glassmorphism effects throughout
 
 ### Aurora Intensity Settings
-- **Low**: amplitude 0.8, blend 0.4
+- **Low**: amplitude 0.8, blend 0.4 (subtle)
 - **Medium**: amplitude 1.0, blend 0.5 (default)
-- **High**: amplitude 1.3, blend 0.7
+- **High**: amplitude 1.3, blend 0.7 (vibrant)
 
 ## How can I edit this code?
 

@@ -126,6 +126,10 @@ export default function Aurora(props: AuroraProps) {
   propsRef.current = props;
 
   const ctnDom = useRef<HTMLDivElement>(null);
+  const targetAmplitudeRef = useRef(amplitude);
+  const targetBlendRef = useRef(blend);
+  const currentAmplitudeRef = useRef(amplitude);
+  const currentBlendRef = useRef(blend);
   const animationStateRef = useRef({
     targetAmplitude: amplitude,
     currentAmplitude: amplitude,

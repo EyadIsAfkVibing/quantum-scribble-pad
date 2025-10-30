@@ -12,6 +12,9 @@ interface AchievementBadgeProps {
 }
 
 export function AchievementBadge({ achievement, size = 'md' }: AchievementBadgeProps) {
+  // Guard against undefined
+  if (!achievement) return null;
+  
   const icons = {
     trophy: Trophy,
     star: Star,

@@ -12,6 +12,17 @@ interface StreakDisplayProps {
 }
 
 export function StreakDisplay({ streak }: StreakDisplayProps) {
+  // Guard against undefined
+  if (!streak) {
+    return (
+      <Card className="glass hover-lift">
+        <CardContent className="p-4">
+          <div className="text-muted-foreground text-center">No streak data</div>
+        </CardContent>
+      </Card>
+    );
+  }
+  
   return (
     <Card className="glass hover-lift">
       <CardContent className="p-4">

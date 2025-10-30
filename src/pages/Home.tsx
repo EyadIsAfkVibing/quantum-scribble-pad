@@ -1,3 +1,4 @@
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { BookOpen, Code2, History, Play, Zap } from 'lucide-react';
@@ -7,10 +8,22 @@ import { Button } from '@/components/ui/button';
 import { EnhancedMathSolver } from '@/components/EnhancedMathSolver';
 import { StreakDisplay } from '@/components/StreakDisplay';
 import { AchievementBadge } from '@/components/AchievementBadge';
-import Aurora from '@/components/Aurora';
+import { Splash } from '@/components/Splash';
+import { QuickSolve } from '@/components/QuickSolve';
+import { StudyTimer } from '@/components/StudyTimer';
+
+const Aurora = lazy(() => import('@/components/Aurora'));
 
 export default function Home() {
-  const { state } = useApp();
+  const { state, updateLesson } = useApp();
+  const [showSplash, setShowSplash] = useState(true);
+  const [showContent, setShowContent] = useState(false);
+  
+  // Safe state reads with fallbacks
+  const lessons = state.lessons ?? [];
+  const achievements = state.achievements ?? [];
+  const history = state.mathHistory ?? [];
+  const streak = state.studyStreak ?? { currentStreak: 0, longestStreak: 0, totalDays: 0, lastStudyDate: '' };
   
   const auroraIntensityMap = {
     low: { amplitude: 0.8, blend: 0.4 },
@@ -19,6 +32,26 @@ export default function Home() {
   };
 
   const auroraSettings = auroraIntensityMap[state.settings.auroraIntensity];
+  
+  useEffect(() => {
+    // Minimum splash duration for premium feel
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+      setTimeout(() => setShowContent(true), 100);
+    }, 1400);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const handleTimerUpdate = (seconds: number) => {
+    // Update study time for current session
+    const activeLesson = lessons.find(l => l.id === state.currentNotes);
+    if (activeLesson) {
+      updateLesson(activeLesson.id, { 
+        timeSpent: Math.floor(seconds / 60) 
+      });
+    }
+  };
 
   const handleQuickAction = () => {
     document.dispatchEvent(
@@ -28,14 +61,25 @@ export default function Home() {
     );
   };
 
-  const recentLesson = state.lessons[state.lessons.length - 1];
-  const recentProblem = state.mathHistory[0];
+  const recentLesson = lessons[lessons.length - 1];
+  const recentProblem = history[0];
 
+  if (showSplash) {
+    return <Splash onComplete={() => setShowSplash(false)} />;
+  }
+  
   return (
     <>
-      <Aurora {...auroraSettings} speed={0.8} />
+      <Suspense fallback={<div />}>
+        <Aurora {...auroraSettings} speed={0.8} />
+      </Suspense>
       
-      <div className="container mx-auto px-6 py-8 space-y-8 relative z-10">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: showContent ? 1 : 0 }}
+        transition={{ duration: 0.6 }}
+        className="container mx-auto px-6 py-8 space-y-8 relative z-10"
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -92,7 +136,7 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <StreakDisplay streak={state.studyStreak} />
+            <StreakDisplay streak={streak} />
           </motion.div>
 
           <motion.div
@@ -136,21 +180,40 @@ export default function Home() {
         >
           <h3 className="text-lg font-semibold mb-4">Achievements</h3>
           <div className="flex gap-4">
-            {state.achievements.map((achievement) => (
+            {(achievements || []).map((achievement) => (
               <AchievementBadge key={achievement.id} achievement={achievement} />
             ))}
           </div>
         </motion.div>
 
-        {/* Enhanced Math Solver */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <EnhancedMathSolver />
-        </motion.div>
-      </div>
+        {/* Quick Tools Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <QuickSolve />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <StudyTimer onTimeUpdate={handleTimerUpdate} />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="lg:col-span-1"
+          >
+            <EnhancedMathSolver />
+          </motion.div>
+        </div>
+      </motion.div>
     </>
   );
 }
