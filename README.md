@@ -1,6 +1,14 @@
-# MathMind - Premium Student Dashboard
+# MathMind
 
-Your stunning, interactive learning platform for math and programming with cutting-edge UI/UX.
+Your futuristic workspace for math and programming with advanced WebGL background effects.
+
+## 🌌 DarkVeil Shader Background
+
+The new **DarkVeil** WebGL shader creates a mesmerizing neural network-inspired background:
+- **CPPN-based rendering**: Compositional pattern-producing network for organic visuals
+- **Customizable parameters**: hueShift, noiseIntensity, warpAmount, scanlines
+- **Lazy-loaded**: Performance-optimized with React.Suspense
+- **Theme-responsive**: Parameters adjust when switching light/dark mode
 
 ## ✨ New Features
 
@@ -49,20 +57,11 @@ All shortcuts work globally (except when typing in inputs):
 - **Accessibility**: Respects `prefers-reduced-motion` system setting
 - **Performance**: Efficient Web Audio API implementation
 
-### 🌌 Aurora Background (Enhanced)
-- **Event-Driven**: Responds to all major UI interactions
-- **Smooth Interpolation**: Gentle amplitude and blend transitions
-- **Customizable Intensity**: Low/Medium/High settings in Settings
-- **Lazy-Loaded**: Optimized performance with React.Suspense
-- **Event API**:
-  ```javascript
-  // Pulse effect
-  document.dispatchEvent(
-    new CustomEvent('aurora:pulse', { 
-      detail: { amplitude: 1.5, duration: 600 } 
-    })
-  );
-  ```
+### 📝 Quick Notes Panel
+- **Floating Button**: Bottom-right corner for instant access
+- **Auto-save**: Notes save automatically after 2 seconds
+- **Persistent Storage**: Synced with localStorage
+- **Fixed Input**: Typing now works correctly with proper pointer events
 
 ### 📱 Responsive Features
 - **Adaptive Navigation**: Compact on mobile, full labels on desktop

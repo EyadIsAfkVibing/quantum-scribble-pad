@@ -1,20 +1,14 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { BookOpen, Code2, History, Play, Zap } from 'lucide-react';
+import { BookOpen, Code2, ArrowRight } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { EnhancedMathSolver } from '@/components/EnhancedMathSolver';
-import { StreakDisplay } from '@/components/StreakDisplay';
-import { AchievementBadge } from '@/components/AchievementBadge';
 import { Splash } from '@/components/Splash';
-import { QuickSolve } from '@/components/QuickSolve';
-import { StudyTimer } from '@/components/StudyTimer';
 import { SessionResume } from '@/components/SessionResume';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
-const Aurora = lazy(() => import('@/components/Aurora'));
+const DarkVeil = lazy(() => import('@/components/DarkVeil'));
 
 export default function Home() {
   const { state, updateLesson } = useApp();
@@ -28,22 +22,10 @@ export default function Home() {
     return <Splash onComplete={() => {}} />;
   }
   
-  // Safe state reads with fallbacks
   const lessons = state?.lessons ?? [];
-  const achievements = state?.achievements ?? [];
-  const history = state?.mathHistory ?? [];
-  const streak = state?.studyStreak ?? { currentStreak: 0, longestStreak: 0, totalDays: 0, lastStudyDate: '' };
-  
-  const auroraIntensityMap = {
-    low: { amplitude: 0.8, blend: 0.4 },
-    medium: { amplitude: 1.0, blend: 0.5 },
-    high: { amplitude: 1.3, blend: 0.7 },
-  };
-
-  const auroraSettings = auroraIntensityMap[state?.settings?.auroraIntensity ?? 'medium'];
+  const recentLesson = lessons[lessons.length - 1];
   
   useEffect(() => {
-    // Minimum splash duration for premium feel
     const timer = setTimeout(() => {
       setShowSplash(false);
       setTimeout(() => setShowContent(true), 100);
@@ -51,27 +33,6 @@ export default function Home() {
     
     return () => clearTimeout(timer);
   }, []);
-  
-  const handleTimerUpdate = (seconds: number) => {
-    // Update study time for current session
-    const activeLesson = lessons.find(l => l.id === state?.currentNotes);
-    if (activeLesson && updateLesson) {
-      updateLesson(activeLesson.id, { 
-        timeSpent: Math.floor(seconds / 60) 
-      });
-    }
-  };
-
-  const handleQuickAction = () => {
-    document.dispatchEvent(
-      new CustomEvent('aurora:pulse', { 
-        detail: { amplitude: 1.6, duration: 600 } 
-      })
-    );
-  };
-
-  const recentLesson = lessons[lessons.length - 1];
-  const recentProblem = history[0];
 
   if (showSplash) {
     return <Splash onComplete={() => setShowSplash(false)} />;
@@ -80,156 +41,93 @@ export default function Home() {
   return (
     <>
       <Suspense fallback={<div />}>
-        <Aurora {...auroraSettings} speed={0.8} />
+        <DarkVeil 
+          hueShift={0} 
+          noiseIntensity={0.03} 
+          speed={0.3} 
+          warpAmount={0.2}
+        />
       </Suspense>
       
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: showContent ? 1 : 0 }}
         transition={{ duration: 0.6 }}
-        className="container mx-auto px-6 py-8 space-y-8 relative z-10"
+        className="min-h-screen flex flex-col items-center justify-center px-6 relative z-10"
       >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-4"
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-center space-y-8 max-w-4xl"
         >
-          <motion.h1 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ staggerChildren: 0.05 }}
-            className="text-4xl md:text-6xl font-bold gradient-primary bg-clip-text text-transparent"
+          {/* Logo and Title */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
           >
-            MathMind
-          </motion.h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Your futuristic workspace for math and programming
-          </p>
-        </motion.div>
+            <h1 className="text-6xl md:text-8xl font-bold mb-4">
+              <span className="gradient-primary bg-clip-text text-transparent glow-primary">
+                MathMind
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground">
+              Your futuristic workspace for math and programming
+            </p>
+          </motion.div>
 
-        {/* Session Resume */}
-        <SessionResume />
+          {/* Session Resume */}
+          <SessionResume />
 
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <Zap className="w-6 h-6 text-accent" />
-            Quick Actions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link to="/lessons" onClick={handleQuickAction}>
-              <Button className="w-full h-24 text-lg gradient-primary hover-lift glow-primary">
-                <BookOpen className="w-6 h-6 mr-3" />
-                New Lesson
+          {/* Main Navigation Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12"
+          >
+            <Link to="/lessons">
+              <Button className="w-full h-32 text-xl gradient-primary hover-lift glow-primary group">
+                <div className="flex flex-col items-center gap-3">
+                  <BookOpen className="w-10 h-10" />
+                  <span>New Lesson</span>
+                </div>
               </Button>
             </Link>
             
             {recentLesson && (
-              <Link to="/lessons" onClick={handleQuickAction}>
-                <Button className="w-full h-24 text-lg glass hover:glow-secondary">
-                  <Play className="w-6 h-6 mr-3" />
-                  Continue Last
+              <Link to="/lessons">
+                <Button className="w-full h-32 text-xl glass-strong hover:glow-secondary group">
+                  <div className="flex flex-col items-center gap-3">
+                    <ArrowRight className="w-10 h-10" />
+                    <span>Continue Last</span>
+                  </div>
                 </Button>
               </Link>
             )}
             
-            <Link to="/code" onClick={handleQuickAction}>
-              <Button className="w-full h-24 text-lg gradient-accent hover-lift glow-accent">
-                <Code2 className="w-6 h-6 mr-3" />
-                Code Lab
+            <Link to="/code">
+              <Button className="w-full h-32 text-xl gradient-accent hover-lift glow-accent group">
+                <div className="flex flex-col items-center gap-3">
+                  <Code2 className="w-10 h-10" />
+                  <span>Code Lab</span>
+                </div>
               </Button>
             </Link>
-          </div>
-        </motion.div>
-
-        {/* Recent Activity & Streak */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <StreakDisplay streak={streak} />
           </motion.div>
 
+          {/* Footer Hint */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="glass-strong hover-lift">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="w-5 h-5" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {recentLesson && (
-                  <div className="glass rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground">Last Lesson</p>
-                    <p className="font-semibold">{recentLesson.name}</p>
-                  </div>
-                )}
-                {recentProblem && (
-                  <div className="glass rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground">Last Problem</p>
-                    <p className="font-mono text-sm">{recentProblem.expression}</p>
-                  </div>
-                )}
-                {!recentLesson && !recentProblem && (
-                  <p className="text-muted-foreground text-center py-4">Start your journey!</p>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-
-        {/* Achievements */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <h3 className="text-lg font-semibold mb-4">Achievements</h3>
-          <div className="flex gap-4">
-            {(achievements || []).map((achievement) => (
-              <AchievementBadge key={achievement.id} achievement={achievement} />
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Quick Tools Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
+            className="mt-16 text-muted-foreground/60 text-sm"
           >
-            <QuickSolve />
+            <p>Navigate to <span className="text-primary">Lessons</span> or <span className="text-accent">Code Lab</span> to explore content</p>
+            <p className="mt-2 text-xs">Press <kbd className="px-2 py-1 rounded bg-muted/30">⌘K</kbd> to search</p>
           </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <StudyTimer onTimeUpdate={handleTimerUpdate} />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="lg:col-span-1"
-          >
-            <EnhancedMathSolver />
-          </motion.div>
-        </div>
+        </motion.div>
       </motion.div>
     </>
   );
