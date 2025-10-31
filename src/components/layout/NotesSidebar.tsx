@@ -1,24 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { StickyNote, ChevronRight, Save } from 'lucide-react';
+import { StickyNote, ChevronRight } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export function NotesSidebar() {
   const [isOpen, setIsOpen] = useState(true);
   const { state, updateNotes } = useApp();
-  const { toast } = useToast();
   const [localNotes, setLocalNotes] = useState(state.currentNotes);
 
-  const handleSave = () => {
-    updateNotes(localNotes);
-    toast({
-      title: "Notes saved",
-      description: "Your notes have been saved successfully.",
-    });
-  };
+  // Autosave to localStorage and context
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localNotes !== state.currentNotes) {
+        updateNotes(localNotes);
+        localStorage.setItem('mathMindNotes', localNotes);
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [localNotes, state.currentNotes, updateNotes]);
 
   return (
     <>
@@ -29,9 +31,9 @@ export function NotesSidebar() {
             animate={{ x: 0 }}
             exit={{ x: 400 }}
             transition={{ type: "spring", damping: 20 }}
-            className="fixed right-0 top-16 bottom-0 w-80 glass-strong border-l p-6 overflow-y-auto shadow-2xl"
+            className="fixed right-0 top-16 bottom-0 w-80 glass-strong border-l shadow-2xl flex flex-col"
           >
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between p-6 pb-4 border-b border-white/10 flex-shrink-0">
               <div className="flex items-center gap-2">
                 <StickyNote className="w-5 h-5 text-accent glow-accent" />
                 <h2 className="text-lg font-semibold">Quick Notes</h2>
@@ -46,20 +48,21 @@ export function NotesSidebar() {
               </Button>
             </div>
             
-            <Textarea
-              value={localNotes}
-              onChange={(e) => setLocalNotes(e.target.value)}
-              placeholder="Write your notes here... formulas, ideas, reminders..."
-              className="min-h-[400px] glass resize-none mb-4 text-base"
-            />
+            <ScrollArea className="flex-1 p-6">
+              <Textarea
+                value={localNotes}
+                onChange={(e) => setLocalNotes(e.target.value)}
+                placeholder="Write your notes here... formulas, ideas, reminders..."
+                className="min-h-[calc(100vh-200px)] glass resize-y text-base focus:outline-none focus:ring-2 focus:ring-accent/50"
+                style={{ pointerEvents: 'auto' }}
+              />
+            </ScrollArea>
             
-            <Button
-              onClick={handleSave}
-              className="w-full gradient-primary hover:opacity-90 hover-lift"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Save Notes
-            </Button>
+            <div className="p-6 pt-4 border-t border-white/10 flex-shrink-0">
+              <p className="text-xs text-muted-foreground text-center">
+                Auto-saves after 1 second
+              </p>
+            </div>
           </motion.aside>
         )}
       </AnimatePresence>
