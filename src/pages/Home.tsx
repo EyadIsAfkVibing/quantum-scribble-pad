@@ -1,12 +1,18 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { BookOpen, Code2, ArrowRight } from 'lucide-react';
+import { BookOpen, Code2, ArrowRight, Calculator, Zap } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Splash } from '@/components/Splash';
 import { SessionResume } from '@/components/SessionResume';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { EnhancedMathSolver } from '@/components/EnhancedMathSolver';
+import { QuickSolve } from '@/components/QuickSolve';
+import { StudyTimer } from '@/components/StudyTimer';
+import { ProblemHistory } from '@/components/ProblemHistory';
+import { SmartSummary } from '@/components/SmartSummary';
+import { AIAssistant } from '@/components/AIAssistant';
 
 const DarkVeil = lazy(() => import('@/components/DarkVeil'));
 
@@ -53,23 +59,19 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: showContent ? 1 : 0 }}
         transition={{ duration: 0.6 }}
-        className="min-h-screen flex flex-col items-center justify-center px-6 relative z-10"
+        className="min-h-screen px-6 py-12 relative z-10"
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-center space-y-8 max-w-4xl"
-        >
-          {/* Logo and Title */}
+        <div className="container mx-auto max-w-7xl">
+          {/* Header Section */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            className="text-center mb-12"
           >
-            <h1 className="text-6xl md:text-8xl font-bold mb-4">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4">
               <span className="gradient-primary bg-clip-text text-transparent glow-primary">
-                MathMind
+                Quantum Pad
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground">
@@ -77,15 +79,12 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Session Resume */}
-          <SessionResume />
-
           {/* Main Navigation Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
           >
             <Link to="/lessons">
               <Button className="w-full h-32 text-xl gradient-primary hover-lift glow-primary group">
@@ -96,17 +95,6 @@ export default function Home() {
               </Button>
             </Link>
             
-            {recentLesson && (
-              <Link to="/lessons">
-                <Button className="w-full h-32 text-xl glass-strong hover:glow-secondary group">
-                  <div className="flex flex-col items-center gap-3">
-                    <ArrowRight className="w-10 h-10" />
-                    <span>Continue Last</span>
-                  </div>
-                </Button>
-              </Link>
-            )}
-            
             <Link to="/code">
               <Button className="w-full h-32 text-xl gradient-accent hover-lift glow-accent group">
                 <div className="flex flex-col items-center gap-3">
@@ -115,20 +103,67 @@ export default function Home() {
                 </div>
               </Button>
             </Link>
+
+            <Link to="/history">
+              <Button className="w-full h-32 text-xl glass-strong hover:glow-secondary group">
+                <div className="flex flex-col items-center gap-3">
+                  <ArrowRight className="w-10 h-10" />
+                  <span>History</span>
+                </div>
+              </Button>
+            </Link>
           </motion.div>
 
-          {/* Footer Hint */}
+          {/* Quick Actions Section */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-16 text-muted-foreground/60 text-sm"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mb-8"
           >
-            <p>Navigate to <span className="text-primary">Lessons</span> or <span className="text-accent">Code Lab</span> to explore content</p>
-            <p className="mt-2 text-xs">Press <kbd className="px-2 py-1 rounded bg-muted/30">⌘K</kbd> to search</p>
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              <Zap className="w-6 h-6 text-primary" />
+              Quick Actions
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <EnhancedMathSolver />
+              <QuickSolve />
+            </div>
           </motion.div>
-        </motion.div>
+
+          {/* Dashboard Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              <Calculator className="w-6 h-6 text-accent" />
+              Dashboard
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <SmartSummary />
+              <StudyTimer onTimeUpdate={(seconds) => console.log('Study time:', seconds)} />
+              <ProblemHistory />
+            </div>
+          </motion.div>
+
+          {/* Session Resume (if available) */}
+          {recentLesson && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="mt-8"
+            >
+              <SessionResume />
+            </motion.div>
+          )}
+        </div>
       </motion.div>
+
+      {/* AI Assistant */}
+      <AIAssistant />
     </>
   );
 }

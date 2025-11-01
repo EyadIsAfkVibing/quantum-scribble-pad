@@ -18,16 +18,29 @@ export function Navigation() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-strong border-b backdrop-blur-3xl">
-      <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-center gap-4">
-        <div className="flex items-center gap-4 max-w-4xl w-full">
-          <div className="flex-1 flex items-center justify-center max-w-md">
-            <UniversalSearch />
-          </div>
+      <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
+        {/* Logo/Brand */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="text-2xl font-bold"
+          >
+            <span className="gradient-primary bg-clip-text text-transparent glow-primary">
+              Quantum Pad
+            </span>
+          </motion.div>
+        </div>
 
-          <div className="flex items-center gap-2 md:gap-3">
-            <ProgressIndicator />
-          
-            <div className="hidden lg:flex items-center gap-1">
+        {/* Search Bar */}
+        <div className="flex-1 flex items-center justify-center max-w-md">
+          <UniversalSearch />
+        </div>
+
+        {/* Navigation Items */}
+        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+          <ProgressIndicator />
+        
+          <div className="hidden lg:flex items-center gap-1">
               {navItems.map(({ path, label, icon: Icon }) => {
                 const isActive = location.pathname === path;
                 return (
@@ -56,7 +69,6 @@ export function Navigation() {
                 );
               })}
             </div>
-          </div>
         </div>
       </div>
     </nav>

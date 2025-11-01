@@ -1,4 +1,108 @@
-# MathMind
+# Quantum Pad
+
+A premium, futuristic workspace for learning math and programming. Features AI assistance, real-time code execution, interactive math solvers, and smart study tracking.
+
+## ✨ Key Features
+
+### 🤖 AI Assistant
+- Chat-based interface for math and coding questions
+- Step-by-step explanations
+- Supports math problems, coding concepts, and code examples
+- Markdown-formatted responses with syntax highlighting
+
+### 🧮 Advanced Math Tools
+- **Enhanced Math Solver**: Linear equations, quadratic equations, and square roots
+- **Quick Solve**: Instant calculator for fast computations
+- **Problem History**: Track, rerun, and delete solved problems
+- Step-by-step solution breakdowns
+
+### 💻 Code Lab with Python Support
+- **Real Python Execution**: Client-side Python running via Pyodide
+- **Multi-language Support**: Python, JavaScript, and C++
+- **Live Output**: See console output in real-time
+- Syntax highlighting and code saving
+
+### 📝 Smart Notes with Markdown
+- **Markdown Support**: Bold, italic, code blocks, headers, lists
+- **Live Preview**: Toggle between edit and preview modes
+- **Auto-save**: Saves after 1 second of inactivity
+- Resizable and scrollable sidebar
+
+### 📊 Study Dashboard
+- **Smart Summary**: Daily stats, streak tracking, and progress metrics
+- **Study Timer**: Track focused study time with start/pause/reset
+- **Session Resume**: Pick up where you left off
+- Achievement system
+
+### 🎨 Theme & Customization
+- **Dark/Light Modes**: Smooth transitions between themes
+- **DarkVeil Shader**: Premium WebGL background effect
+- **Custom Gradient Editor**: Design your own color schemes
+- **Aurora Intensity**: Adjustable background effects
+- Typography settings
+
+### ⚡ Quick Actions
+- Universal search across lessons, notes, and history
+- Keyboard shortcuts (⌘K for search)
+- Quick notes floating button
+- Drag-and-drop video embeds for lessons
+
+## 🚀 Getting Started
+
+1. **Home Screen**: Access all tools and your dashboard
+2. **Code Lab**: Write and execute Python/JavaScript code
+3. **Lessons**: Create and manage study lessons with notes and videos
+4. **History**: Review all solved problems and saved code
+5. **Settings**: Customize theme, fonts, and visual effects
+
+## 🎯 Navigation
+
+- **Home** - Dashboard with all tools and AI assistant
+- **Lessons** - Create and organize study lessons
+- **Code** - Write and execute code
+- **History** - View past problems and snippets
+- **Settings** - Customize your experience
+
+## 🔧 Tech Stack
+
+- React 18 + TypeScript
+- Vite for blazing-fast builds
+- Framer Motion for smooth animations
+- Pyodide for client-side Python execution
+- WebGL shaders for premium visual effects
+- React Markdown for rich text rendering
+- Local storage for data persistence
+
+## 📱 Features
+
+- Fully responsive design
+- Glassmorphism UI with subtle glows
+- Smooth page transitions
+- Keyboard navigation
+- Accessibility support
+- Performance optimized
+
+## 🎓 Use Cases
+
+- Solving math problems with step-by-step guidance
+- Learning programming concepts interactively
+- Practicing code in Python, JavaScript, or C++
+- Organizing study notes with Markdown
+- Tracking study progress and streaks
+- Getting AI help for homework
+
+## 🔥 Tips
+
+- Press **⌘K** to quickly search anything
+- Use the **AI Assistant** for instant help
+- Toggle **Markdown preview** in notes to see formatted text
+- Try running **Python code** directly in the browser
+- Customize colors with the **Gradient Editor**
+- Track your progress in the **Smart Summary**
+
+---
+
+Built with ❤️ for learners who want a premium, futuristic study experience.
 
 Your futuristic workspace for math and programming with advanced WebGL background effects.
 

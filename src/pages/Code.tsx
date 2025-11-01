@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Code2, Play, Save } from 'lucide-react';
+import { Code2, Play, Save, Trash2 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,15 +19,93 @@ export default function Code() {
   const [code, setCode] = useState(defaultCode);
   const [activeTab, setActiveTab] = useState<'python' | 'javascript' | 'cpp'>('python');
   const [output, setOutput] = useState('');
+  const [isRunning, setIsRunning] = useState(false);
+  const [pyodide, setPyodide] = useState<any>(null);
   const { addCodeSnippet } = useApp();
   const { toast } = useToast();
 
-  const handleRun = () => {
-    setOutput('⚠️ Code execution requires a backend. This is a visualization playground.');
-    toast({
-      title: "Code Preview",
-      description: "This is a frontend-only playground. Execution would require backend integration.",
-    });
+  // Load Pyodide for Python execution
+  useEffect(() => {
+    if (activeTab === 'python' && !pyodide) {
+      loadPyodide();
+    }
+  }, [activeTab]);
+
+  const loadPyodide = async () => {
+    try {
+      // @ts-ignore
+      const pyodideInstance = await window.loadPyodide({
+        indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/'
+      });
+      setPyodide(pyodideInstance);
+      console.log('Pyodide loaded successfully');
+    } catch (error) {
+      console.error('Failed to load Pyodide:', error);
+    }
+  };
+
+  const handleRun = async () => {
+    setIsRunning(true);
+    setOutput('');
+
+    try {
+      if (activeTab === 'python') {
+        if (!pyodide) {
+          setOutput('⏳ Loading Python environment...');
+          await loadPyodide();
+          return;
+        }
+
+        // Capture stdout
+        pyodide.runPython(`
+          import sys
+          from io import StringIO
+          sys.stdout = StringIO()
+        `);
+
+        try {
+          await pyodide.runPythonAsync(code.python);
+          const stdout = pyodide.runPython('sys.stdout.getvalue()');
+          setOutput(stdout || 'Code executed successfully (no output)');
+        } catch (err: any) {
+          setOutput(`❌ Error:\n${err.message}`);
+        }
+      } else if (activeTab === 'javascript') {
+        // Capture console.log for JavaScript
+        const logs: string[] = [];
+        const originalLog = console.log;
+        console.log = (...args) => {
+          logs.push(args.map(arg => String(arg)).join(' '));
+          originalLog(...args);
+        };
+
+        try {
+          // Execute in isolated scope
+          new Function(code.javascript)();
+          console.log = originalLog;
+          setOutput(logs.join('\n') || 'Code executed successfully (no output)');
+        } catch (err: any) {
+          console.log = originalLog;
+          setOutput(`❌ Error:\n${err.message}`);
+        }
+      } else {
+        setOutput('⚠️ C++ execution requires a backend compiler. This is a visualization playground.');
+      }
+
+      toast({
+        title: "Code Executed",
+        description: `${activeTab.toUpperCase()} code ran successfully`,
+      });
+    } catch (error: any) {
+      setOutput(`❌ Execution Error:\n${error.message}`);
+      toast({
+        title: "Execution Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   const handleSave = () => {
@@ -83,10 +161,20 @@ export default function Code() {
                   <Button
                     size="sm"
                     onClick={handleRun}
+                    disabled={isRunning}
                     className="gradient-accent hover:opacity-90"
                   >
                     <Play className="w-4 h-4 mr-2" />
-                    Run
+                    {isRunning ? 'Running...' : 'Run'}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setOutput('')}
+                    className="glass"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Clear
                   </Button>
                 </div>
               </CardTitle>

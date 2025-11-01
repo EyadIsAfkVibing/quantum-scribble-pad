@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, Moon, Sun, Type, Sparkles } from 'lucide-react';
+import { Settings as SettingsIcon, Moon, Sun, Type, Sparkles, Palette } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { GradientEditor } from '@/components/GradientEditor';
 import { useEffect } from 'react';
 
 export default function Settings() {
@@ -59,7 +60,7 @@ export default function Settings() {
           Settings
         </h1>
         <p className="text-muted-foreground">
-          Customize your MathMind experience
+          Customize your Quantum Pad experience
         </p>
       </motion.div>
 
@@ -190,6 +191,14 @@ export default function Settings() {
               </div>
             </CardContent>
           </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <GradientEditor />
         </motion.div>
       </div>
     </div>

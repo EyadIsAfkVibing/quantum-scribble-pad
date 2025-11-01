@@ -39,6 +39,7 @@ type AppAction =
   | { type: 'UPDATE_LESSON'; payload: { id: string; updates: Partial<Lesson> } }
   | { type: 'DELETE_LESSON'; payload: string }
   | { type: 'ADD_MATH_PROBLEM'; payload: MathProblem }
+  | { type: 'DELETE_MATH_PROBLEM'; payload: string }
   | { type: 'ADD_CODE_SNIPPET'; payload: CodeSnippet }
   | { type: 'UPDATE_SETTINGS'; payload: Partial<AppSettings> }
   | { type: 'UPDATE_NOTES'; payload: string }
@@ -53,6 +54,7 @@ interface AppContextType {
   updateLesson: (id: string, updates: Partial<Lesson>) => void;
   deleteLesson: (id: string) => void;
   addMathProblem: (problem: MathProblem) => void;
+  deleteMathProblem: (id: string) => void;
   addCodeSnippet: (snippet: CodeSnippet) => void;
   updateSettings: (settings: Partial<AppSettings>) => void;
   updateNotes: (notes: string) => void;
@@ -77,6 +79,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, lessons: state.lessons.filter(l => l.id !== action.payload) };
     case 'ADD_MATH_PROBLEM':
       return { ...state, mathHistory: [action.payload, ...state.mathHistory].slice(0, 50) };
+    case 'DELETE_MATH_PROBLEM':
+      return { ...state, mathHistory: state.mathHistory.filter(p => p.id !== action.payload) };
     case 'ADD_CODE_SNIPPET':
       return { ...state, codeHistory: [action.payload, ...state.codeHistory].slice(0, 50) };
     case 'UPDATE_SETTINGS':
@@ -161,6 +165,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const deleteMathProblem = (id: string) => {
+    setState(prev => ({
+      ...prev,
+      mathHistory: prev.mathHistory.filter(p => p.id !== id),
+    }));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -170,6 +181,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         updateLesson,
         deleteLesson,
         addMathProblem,
+        deleteMathProblem,
         addCodeSnippet,
         updateSettings,
         updateNotes,

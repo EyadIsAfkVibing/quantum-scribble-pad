@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { StickyNote, ChevronRight } from 'lucide-react';
+import { StickyNote, ChevronRight, Eye, Edit } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export function NotesSidebar() {
   const [isOpen, setIsOpen] = useState(true);
+  const [isPreview, setIsPreview] = useState(false);
   const { state, updateNotes } = useApp();
   const [localNotes, setLocalNotes] = useState(state.currentNotes);
 
@@ -38,29 +41,60 @@ export function NotesSidebar() {
                 <StickyNote className="w-5 h-5 text-accent glow-accent" />
                 <h2 className="text-lg font-semibold">Quick Notes</h2>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsOpen(false)}
-                className="hover:bg-accent/20"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsPreview(!isPreview)}
+                  className="hover:bg-accent/20"
+                >
+                  {isPreview ? <Edit className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsOpen(false)}
+                  className="hover:bg-accent/20"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
             
             <ScrollArea className="flex-1 p-6">
-              <Textarea
-                value={localNotes}
-                onChange={(e) => setLocalNotes(e.target.value)}
-                placeholder="Write your notes here... formulas, ideas, reminders..."
-                className="min-h-[calc(100vh-200px)] glass resize-y text-base focus:outline-none focus:ring-2 focus:ring-accent/50"
-                style={{ pointerEvents: 'auto' }}
-              />
+              {isPreview ? (
+                <div className="prose prose-invert prose-sm max-w-none">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {localNotes || '*No notes yet. Switch to edit mode to start writing.*'}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <Textarea
+                  value={localNotes}
+                  onChange={(e) => setLocalNotes(e.target.value)}
+                  placeholder="Write your notes here... Supports **Markdown**!
+
+# Headers
+## Subheaders
+
+**Bold** *Italic* `code`
+
+- Lists
+- Work too
+
+```javascript
+// Code blocks
+const x = 10;
+```"
+                  className="min-h-[calc(100vh-200px)] glass resize-y text-base focus:outline-none focus:ring-2 focus:ring-accent/50"
+                  style={{ pointerEvents: 'auto' }}
+                />
+              )}
             </ScrollArea>
             
             <div className="p-6 pt-4 border-t border-white/10 flex-shrink-0">
               <p className="text-xs text-muted-foreground text-center">
-                Auto-saves after 1 second
+                Auto-saves after 1 second • Markdown supported
               </p>
             </div>
           </motion.aside>
