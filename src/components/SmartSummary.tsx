@@ -5,7 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function SmartSummary() {
   const { state } = useApp();
-  const { mathHistory, studyStreak, lessons } = state;
+  const { mathHistory, lessons } = state;
+  const studyStreak = state.studyStreak || {
+    currentStreak: 0,
+    longestStreak: 0,
+    lastStudyDate: '',
+    totalDays: 0
+  };
 
   const todayProblems = mathHistory.filter(p => {
     const today = new Date().toDateString();
