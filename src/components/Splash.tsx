@@ -43,18 +43,18 @@ export function Splash({ onComplete }: SplashProps) {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
-        className="mt-6 text-4xl font-bold gradient-primary bg-clip-text text-transparent"
+        className="mt-6 text-5xl font-bold gradient-primary bg-clip-text text-transparent"
       >
-        MathMind
+        Quantum Pad
       </motion.h1>
       
       <motion.p
         initial={{ y: 10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.5 }}
-        className="mt-2 text-muted-foreground"
+        className="mt-2 text-lg text-muted-foreground"
       >
-        Your futuristic math workspace
+        Your futuristic learning workspace
       </motion.p>
       
       <motion.div

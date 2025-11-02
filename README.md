@@ -1,14 +1,18 @@
-# Quantum Pad
+# Quantum Pad 🚀
 
-A premium, futuristic workspace for learning math and programming. Features AI assistance, real-time code execution, interactive math solvers, and smart study tracking.
+A futuristic, premium learning workspace for math, programming, and AI-powered study assistance with external backend integration.
+
+![Quantum Pad](https://via.placeholder.com/1200x400/0d0d12/22d3ee?text=Quantum+Pad)
 
 ## ✨ Key Features
 
-### 🤖 AI Assistant
-- Chat-based interface for math and coding questions
-- Step-by-step explanations
-- Supports math problems, coding concepts, and code examples
-- Markdown-formatted responses with syntax highlighting
+### 🤖 AI Assistant (Backend Integrated)
+- **Ollama/LM Studio Integration**: Connect to your local AI backend
+- **Real-Time Chat**: Get instant help with math and coding
+- **Backend Health Monitoring**: Visual indicators for connection status
+- **Fallback Mode**: Works offline with simulated responses
+- **Markdown Support**: Beautiful formatted responses with code highlighting
+- Step-by-step explanations for complex problems
 
 ### 🧮 Advanced Math Tools
 - **Enhanced Math Solver**: Linear equations, quadratic equations, and square roots
@@ -49,6 +53,42 @@ A premium, futuristic workspace for learning math and programming. Features AI a
 
 ## 🚀 Getting Started
 
+### Frontend Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+### Backend Setup (For AI Features)
+
+**See [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detailed instructions.**
+
+Quick start:
+
+```bash
+# 1. Install Ollama
+curl https://ollama.ai/install.sh | sh
+
+# 2. Pull AI model
+ollama pull mistral
+
+# 3. Start Ollama
+ollama serve
+
+# 4. In another terminal, start FastAPI backend
+cd backend
+python main.py
+```
+
+The AI Assistant will automatically connect to `http://localhost:8080` when available.
+
 1. **Home Screen**: Access all tools and your dashboard
 2. **Code Lab**: Write and execute Python/JavaScript code
 3. **Lessons**: Create and manage study lessons with notes and videos
@@ -65,13 +105,30 @@ A premium, futuristic workspace for learning math and programming. Features AI a
 
 ## 🔧 Tech Stack
 
+### Frontend
 - React 18 + TypeScript
 - Vite for blazing-fast builds
 - Framer Motion for smooth animations
 - Pyodide for client-side Python execution
 - WebGL shaders for premium visual effects
 - React Markdown for rich text rendering
+- Tailwind CSS + shadcn/ui components
 - Local storage for data persistence
+
+### Backend (Optional - for AI features)
+- **FastAPI** - Python web framework
+- **Ollama** - Local AI model serving
+- **Uvicorn** - ASGI server
+- **httpx** - Async HTTP client
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check |
+| `/api/chat` | POST | General AI chat |
+| `/api/solve` | POST | Math problem solving |
+| `/api/code-assist` | POST | Code debugging/explanation |
 
 ## 📱 Features
 
