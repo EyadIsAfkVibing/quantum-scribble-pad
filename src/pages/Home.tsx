@@ -1,196 +1,317 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { BookOpen, Code, History } from 'lucide-react';
-import { useApp } from '@/contexts/AppContext';
+import { 
+  BookOpen, 
+  Code2, 
+  BarChart3, 
+  Zap, 
+  Target, 
+  Trophy,
+  Sparkles,
+  ArrowRight
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Splash } from '@/components/Splash';
-import { SessionResume } from '@/components/SessionResume';
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { EnhancedMathSolver } from '@/components/EnhancedMathSolver';
-import { QuickSolve } from '@/components/QuickSolve';
-import { StudyTimer } from '@/components/StudyTimer';
-import { ProblemHistory } from '@/components/ProblemHistory';
-import { SmartSummary } from '@/components/SmartSummary';
-import { AIAssistant } from '@/components/AIAssistant';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-const DarkVeil = lazy(() => import('@/components/DarkVeil'));
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 30 },
+  show: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 200,
+      damping: 25,
+    },
+  },
+};
+
+const navItems = [
+  {
+    title: 'Learn',
+    description: 'Adaptive lessons that evolve with you',
+    icon: BookOpen,
+    path: '/lessons',
+    gradient: 'from-blue-500 to-cyan-500',
+  },
+  {
+    title: 'Code Lab',
+    description: 'Write, run, and master code',
+    icon: Code2,
+    path: '/code',
+    gradient: 'from-purple-500 to-pink-500',
+  },
+  {
+    title: 'Dashboard',
+    description: 'Track your growth and achievements',
+    icon: BarChart3,
+    path: '/history',
+    gradient: 'from-orange-500 to-red-500',
+  },
+];
+
+const features = [
+  {
+    icon: Target,
+    title: 'Adaptive Learning',
+    description: 'AI-powered curriculum that adjusts to your skill level',
+  },
+  {
+    icon: Zap,
+    title: 'Instant Feedback',
+    description: 'Get real-time solutions and explanations',
+  },
+  {
+    icon: Trophy,
+    title: 'ELO Progression',
+    description: 'Track your improvement with intelligent scoring',
+  },
+];
 
 export default function Home() {
-  const { state, updateLesson } = useApp();
-  const [showSplash, setShowSplash] = useState(true);
-  const [showContent, setShowContent] = useState(false);
-  
-  useKeyboardShortcuts();
-  
-  if (!state) {
-    return <Splash onComplete={() => {}} />;
-  }
-  
-  const lessons = state?.lessons ?? [];
-  const recentLesson = lessons[lessons.length - 1];
-  
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 300], [0, 100]);
+  const y2 = useTransform(scrollY, [0, 300], [0, -100]);
+  const opacity = useTransform(scrollY, [0, 200], [1, 0]);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-      setTimeout(() => setShowContent(true), 100);
-    }, 1400);
-    
-    return () => clearTimeout(timer);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  if (showSplash) {
-    return <Splash onComplete={() => setShowSplash(false)} />;
-  }
-  
   return (
-    <>
-      <Suspense fallback={<div />}>
-        <DarkVeil 
-          hueShift={0} 
-          noiseIntensity={0.03} 
-          speed={0.3} 
-          warpAmount={0.2}
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="fixed inset-0 -z-10">
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, hsl(var(--primary) / 0.3) 0%, transparent 50%)`,
+            transition: 'background 0.3s ease',
+          }}
         />
-      </Suspense>
-      
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: showContent ? 1 : 0 }}
-        transition={{ duration: 0.8 }}
-        className="min-h-screen px-4 md:px-6 py-16 relative z-10"
-      >
-        <div className="container mx-auto max-w-7xl space-y-16">
-          {/* Hero Section */}
+        <div className="absolute inset-0 gradient-mesh animate-gradient-shift" />
+      </div>
+
+      <div className="container mx-auto px-4 py-16 space-y-32">
+        {/* Hero Section */}
+        <motion.section
+          style={{ opacity }}
+          className="relative min-h-[80vh] flex flex-col items-center justify-center text-center space-y-8"
+        >
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center space-y-6"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.2,
+            }}
+            className="relative"
           >
-            <motion.h1 
-              className="text-6xl md:text-8xl font-black gradient-primary bg-clip-text text-transparent animate-gradient-flow"
-              animate={{ 
-                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-              }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            >
-              Quantum Pad
-            </motion.h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-              Your futuristic workspace for math, code, and learning powered by AI
+            <div className="absolute inset-0 gradient-glow animate-pulse-ring rounded-full" />
+            <div className="relative glass-strong p-8 rounded-full animate-float">
+              <Sparkles className="w-16 h-16 text-primary" />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="space-y-6 max-w-4xl"
+          >
+            <h1 className="text-7xl md:text-9xl font-black tracking-tight">
+              <span className="gradient-primary bg-clip-text text-transparent animate-gradient-shift">
+                Quantum
+              </span>
+              <br />
+              <span className="gradient-secondary bg-clip-text text-transparent animate-gradient-shift">
+                Learning
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Adaptive AI platform that evolves with your learning journey. 
+              Master math and code like never before.
             </p>
           </motion.div>
 
-          {/* Main Navigation Cards */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex gap-4"
           >
-            <Link to="/lessons" className="group">
-              <motion.div
-                whileHover={{ scale: 1.03, y: -4 }}
-                whileTap={{ scale: 0.98 }}
-                className="glass-strong p-8 rounded-2xl border-2 border-primary/20 hover:border-primary/50 transition-all shadow-xl hover:shadow-2xl"
-              >
-                <div className="flex flex-col items-center gap-4 text-center">
-                  <div className="p-4 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 group-hover:scale-110 transition-transform">
-                    <BookOpen className="w-10 h-10 text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-bold">New Lesson</h3>
-                  <p className="text-muted-foreground">Create and organize study sessions</p>
-                </div>
-              </motion.div>
-            </Link>
-
-            <Link to="/code" className="group">
-              <motion.div
-                whileHover={{ scale: 1.03, y: -4 }}
-                whileTap={{ scale: 0.98 }}
-                className="glass-strong p-8 rounded-2xl border-2 border-accent/20 hover:border-accent/50 transition-all shadow-xl hover:shadow-2xl"
-              >
-                <div className="flex flex-col items-center gap-4 text-center">
-                  <div className="p-4 rounded-full bg-gradient-to-br from-accent/30 to-secondary/30 group-hover:scale-110 transition-transform">
-                    <Code className="w-10 h-10 text-accent" />
-                  </div>
-                  <h3 className="text-2xl font-bold">Code Lab</h3>
-                  <p className="text-muted-foreground">Write and run Python & JavaScript</p>
-                </div>
-              </motion.div>
-            </Link>
-
-            <Link to="/history" className="group">
-              <motion.div
-                whileHover={{ scale: 1.03, y: -4 }}
-                whileTap={{ scale: 0.98 }}
-                className="glass-strong p-8 rounded-2xl border-2 border-secondary/20 hover:border-secondary/50 transition-all shadow-xl hover:shadow-2xl"
-              >
-                <div className="flex flex-col items-center gap-4 text-center">
-                  <div className="p-4 rounded-full bg-gradient-to-br from-secondary/30 to-primary/30 group-hover:scale-110 transition-transform">
-                    <History className="w-10 h-10 text-secondary" />
-                  </div>
-                  <h3 className="text-2xl font-bold">History</h3>
-                  <p className="text-muted-foreground">Review past problems and code</p>
-                </div>
-              </motion.div>
-            </Link>
+            <Button size="lg" className="group" asChild>
+              <Link to="/lessons">
+                Start Learning
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="glass" asChild>
+              <Link to="/code">
+                Explore Code Lab
+              </Link>
+            </Button>
           </motion.div>
 
-          {/* Quick Actions */}
-          <motion.section
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="space-y-8"
+          <motion.div
+            style={{ y: y1 }}
+            className="absolute top-20 right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl"
+          />
+          <motion.div
+            style={{ y: y2 }}
+            className="absolute bottom-20 left-10 w-40 h-40 bg-secondary/20 rounded-full blur-3xl"
+          />
+        </motion.section>
+
+        {/* Main Navigation Cards */}
+        <motion.section
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="space-y-8"
+        >
+          <motion.div variants={item} className="text-center space-y-4">
+            <h2 className="text-5xl font-bold gradient-primary bg-clip-text text-transparent">
+              Choose Your Path
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Three powerful tools to accelerate your learning
+            </p>
+          </motion.div>
+
+          <motion.div 
+            variants={container}
+            className="grid md:grid-cols-3 gap-8"
           >
-            <div className="text-center">
-              <h2 className="text-4xl font-bold gradient-accent bg-clip-text text-transparent mb-2">
-                Quick Actions
-              </h2>
-              <p className="text-muted-foreground">Solve problems instantly</p>
-            </div>
-            <div className="grid lg:grid-cols-2 gap-8">
-              <EnhancedMathSolver />
-              <QuickSolve />
-            </div>
-          </motion.section>
+            {navItems.map((navItem, index) => (
+              <motion.div
+                key={navItem.title}
+                variants={item}
+                whileHover={{ scale: 1.05, rotateY: 5 }}
+                whileTap={{ scale: 0.98 }}
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <Link to={navItem.path} className="block h-full">
+                  <Card className="h-full group cursor-pointer overflow-hidden relative">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${navItem.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                    <CardHeader className="relative">
+                      <div className="mb-4 inline-flex p-4 rounded-2xl glass group-hover:scale-110 transition-transform duration-300">
+                        <navItem.icon className="w-8 h-8 text-primary" />
+                      </div>
+                      <CardTitle className="text-3xl">{navItem.title}</CardTitle>
+                      <CardDescription className="text-base">
+                        {navItem.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center text-sm text-primary font-semibold group-hover:translate-x-2 transition-transform">
+                        Get Started
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
 
-          {/* Dashboard */}
-          <motion.section
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="space-y-8"
+        {/* Features Section */}
+        <motion.section
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="space-y-12"
+        >
+          <motion.div variants={item} className="text-center space-y-4">
+            <h2 className="text-5xl font-bold gradient-secondary bg-clip-text text-transparent">
+              Intelligent Features
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Powered by adaptive AI and modern learning science
+            </p>
+          </motion.div>
+
+          <motion.div 
+            variants={container}
+            className="grid md:grid-cols-3 gap-8"
           >
-            <div className="text-center">
-              <h2 className="text-4xl font-bold gradient-accent bg-clip-text text-transparent mb-2">
-                Dashboard
-              </h2>
-              <p className="text-muted-foreground">Track your progress</p>
-            </div>
-            <div className="grid lg:grid-cols-3 gap-8">
-              <SmartSummary />
-              <StudyTimer onTimeUpdate={(seconds) => console.log('Study time:', seconds)} />
-              <ProblemHistory />
-            </div>
-          </motion.section>
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                variants={item}
+                whileHover={{ y: -8 }}
+              >
+                <Card className="text-center h-full">
+                  <CardHeader>
+                    <div className="mx-auto mb-6 p-6 rounded-3xl glass-strong inline-flex animate-float" style={{ animationDelay: `${index * 0.2}s` }}>
+                      <feature.icon className="w-10 h-10 text-primary" />
+                    </div>
+                    <CardTitle className="text-2xl">{feature.title}</CardTitle>
+                    <CardDescription className="text-base leading-relaxed">
+                      {feature.description}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
 
-          {/* Session Resume */}
-          {recentLesson && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-            >
-              <SessionResume />
-            </motion.div>
-          )}
-        </div>
-      </motion.div>
-
-      <AIAssistant />
-    </>
+        {/* CTA Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative"
+        >
+          <Card className="relative overflow-hidden">
+            <div className="absolute inset-0 gradient-primary opacity-5" />
+            <CardHeader className="text-center space-y-6 py-16">
+              <CardTitle className="text-5xl md:text-6xl">
+                Ready to Transform Your Learning?
+              </CardTitle>
+              <CardDescription className="text-xl max-w-2xl mx-auto">
+                Join thousands of learners mastering math and code with AI-powered adaptive education
+              </CardDescription>
+              <div className="pt-4">
+                <Button size="lg" className="text-lg px-12" asChild>
+                  <Link to="/lessons">
+                    Begin Your Journey
+                    <ArrowRight className="ml-3" />
+                  </Link>
+                </Button>
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.section>
+      </div>
+    </div>
   );
 }
