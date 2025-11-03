@@ -207,12 +207,13 @@ export default function Lessons() {
                 </CardHeader>
                 <CardContent className="space-y-6 pt-6">
                   <div>
-                    <Label className="text-base font-semibold">Notes & Formulas</Label>
+                    <Label className="text-base font-semibold text-foreground">Notes & Formulas</Label>
                     <Textarea
                       value={selectedLesson.notes}
                       onChange={(e) => handleUpdateNotes(selectedLesson.id, e.target.value)}
                       placeholder="Write your notes, formulas, and explanations here..."
-                      className="min-h-[300px] glass resize-none mt-2 text-base"
+                      className="min-h-[300px] bg-background/95 resize-none mt-2 text-base text-foreground"
+                      autoFocus
                     />
                   </div>
 

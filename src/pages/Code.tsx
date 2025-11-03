@@ -187,16 +187,17 @@ export default function Code() {
                   <TabsTrigger value="cpp">C++</TabsTrigger>
                 </TabsList>
                 
-                {(['python', 'javascript', 'cpp'] as const).map((lang) => (
-                  <TabsContent key={lang} value={lang} className="space-y-4">
-                    <Textarea
-                      value={code[lang]}
-                      onChange={(e) => setCode({ ...code, [lang]: e.target.value })}
-                      className="font-mono text-sm glass min-h-[500px] resize-none"
-                      spellCheck={false}
-                    />
-                  </TabsContent>
-                ))}
+                  {(['python', 'javascript', 'cpp'] as const).map((lang) => (
+                    <TabsContent key={lang} value={lang} className="space-y-4">
+                      <Textarea
+                        value={code[lang]}
+                        onChange={(e) => setCode({ ...code, [lang]: e.target.value })}
+                        className="font-mono text-sm bg-background/95 text-foreground min-h-[500px] resize-none"
+                        spellCheck={false}
+                        autoFocus
+                      />
+                    </TabsContent>
+                  ))}
               </Tabs>
             </CardContent>
           </Card>

@@ -104,8 +104,8 @@ export function QuickNotesButton() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Jot down quick thoughts..."
-                className="min-h-[200px] resize-none bg-background/50 border-white/20"
-                style={{ pointerEvents: 'auto' }}
+                className="min-h-[200px] resize-none bg-background/95 border-white/20 text-foreground"
+                autoFocus
               />
               
               <p className="text-xs text-muted-foreground">

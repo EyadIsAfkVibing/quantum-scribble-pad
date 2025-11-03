@@ -63,7 +63,7 @@ export function NotesSidebar() {
             
             <ScrollArea className="flex-1 p-6">
               {isPreview ? (
-                <div className="prose prose-invert prose-sm max-w-none">
+                <div className="prose prose-invert prose-sm max-w-none text-foreground">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                     {localNotes || '*No notes yet. Switch to edit mode to start writing.*'}
                   </ReactMarkdown>
@@ -86,8 +86,8 @@ export function NotesSidebar() {
 // Code blocks
 const x = 10;
 ```"
-                  className="min-h-[calc(100vh-200px)] glass resize-y text-base focus:outline-none focus:ring-2 focus:ring-accent/50"
-                  style={{ pointerEvents: 'auto' }}
+                  className="min-h-[calc(100vh-200px)] bg-background/95 resize-y text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  autoFocus
                 />
               )}
             </ScrollArea>
