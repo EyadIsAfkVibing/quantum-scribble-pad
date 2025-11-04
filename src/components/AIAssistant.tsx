@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Send, X, Sparkles, Wifi, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,6 +27,26 @@ export function AIAssistant() {
   const [isLoading, setIsLoading] = useState(false);
   const [isBackendOnline, setIsBackendOnline] = useState(false);
   const { toast } = useToast();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Listen for command palette and summarize events
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    const handleSummarize = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setIsOpen(true);
+      setInput(`Please summarize this text:\n\n${customEvent.detail.text}`);
+      setTimeout(() => handleSend(), 100);
+    };
+    
+    window.addEventListener('open-ai-assistant', handleOpen);
+    window.addEventListener('ai-summarize', handleSummarize);
+    
+    return () => {
+      window.removeEventListener('open-ai-assistant', handleOpen);
+      window.removeEventListener('ai-summarize', handleSummarize);
+    };
+  }, []);
 
   // Check backend health on mount and when opening
   useEffect(() => {
@@ -109,27 +129,42 @@ export function AIAssistant() {
   return (
     <>
       <motion.div
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        className="fixed bottom-8 right-8 z-50"
+        className="fixed bottom-6 left-6 z-50"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       >
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="h-16 w-16 rounded-full gradient-primary shadow-2xl hover-lift glow-primary animate-float"
-          size="icon"
-        >
-          <Bot className="w-8 h-8" />
-        </Button>
+        <div className="relative">
+          <motion.div
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-accent opacity-50 blur-xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.5, 0.7, 0.5],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <Button
+            onClick={() => setIsOpen(!isOpen)}
+            className="relative h-14 w-14 rounded-full gradient-accent shadow-lg hover-lift glow-accent group"
+            size="icon"
+          >
+            <Sparkles className="w-6 h-6 group-hover:scale-110 group-hover:rotate-12 transition-all" />
+          </Button>
+        </div>
       </motion.div>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 40 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 40 }}
+            initial={{ opacity: 0, scale: 0.9, x: -40, y: 40 }}
+            animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, x: -40, y: 40 }}
             transition={{ type: "spring", damping: 25 }}
-            className="fixed bottom-28 right-8 w-full max-w-md h-[650px] z-50"
+            className="fixed bottom-24 left-6 w-full max-w-md h-[650px] z-50"
           >
             <Card className="glass-strong h-full flex flex-col shadow-2xl border-primary/30 overflow-hidden">
               <CardHeader className="border-b border-white/10 flex-shrink-0 bg-gradient-to-r from-primary/20 to-accent/20">

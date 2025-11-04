@@ -7,6 +7,8 @@ import { AppProvider } from "@/contexts/AppContext";
 import { Navigation } from "@/components/layout/Navigation";
 import { NotesSidebar } from "@/components/layout/NotesSidebar";
 import { QuickNotesButton } from "@/components/QuickNotesButton";
+import { AIAssistant } from "@/components/AIAssistant";
+import { CommandPalette } from "@/components/CommandPalette";
 import Home from "./pages/Home";
 import Lessons from "./pages/Lessons";
 import Code from "./pages/Code";
@@ -38,6 +40,8 @@ const App = () => {
               </main>
               <NotesSidebar />
               <QuickNotesButton />
+              <AIAssistant />
+              <CommandPalette />
             </div>
           </BrowserRouter>
         </AppProvider>

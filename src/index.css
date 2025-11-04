@@ -170,6 +170,33 @@ All colors MUST be HSL.
     box-shadow: var(--shadow-glow);
     transform: translateY(-2px);
   }
+  
+  /* Enhanced button interactions */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-xl;
+  }
+
+  .interactive-scale {
+    @apply transition-transform duration-200 active:scale-95;
+  }
+
+  .button-glow {
+    @apply relative overflow-hidden;
+  }
+
+  .button-glow::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%];
+    animation: shimmer 3s infinite;
+  }
+
+  .button-glow:hover::before {
+    animation: shimmer 1.5s infinite;
+  }
 
   /* Premium animations */
   @keyframes float {
