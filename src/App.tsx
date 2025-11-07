@@ -11,6 +11,7 @@ import { AIAssistant } from "@/components/AIAssistant";
 import { CommandPalette } from "@/components/CommandPalette";
 import Home from "./pages/Home";
 import Lessons from "./pages/Lessons";
+import Solver from "./pages/Solver";
 import Code from "./pages/Code";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
@@ -32,6 +33,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/lessons" element={<Lessons />} />
+                  <Route path="/solver" element={<Solver />} />
                   <Route path="/code" element={<Code />} />
                   <Route path="/history" element={<History />} />
                   <Route path="/settings" element={<Settings />} />
