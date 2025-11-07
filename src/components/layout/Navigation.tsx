@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Code2, BarChart3, User, Sparkles } from 'lucide-react';
+import { BookOpen, Calculator, Code2, BarChart3, User, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const navItems = [
   { path: '/', label: 'Home', icon: Sparkles },
   { path: '/lessons', label: 'Lessons', icon: BookOpen },
+  { path: '/solver', label: 'Solver', icon: Calculator },
   { path: '/code', label: 'Code Lab', icon: Code2 },
   { path: '/history', label: 'Dashboard', icon: BarChart3 },
   { path: '/settings', label: 'Profile', icon: User },
